@@ -3,46 +3,40 @@
 <head>
 
   <script>
-(function(publicAppId){
-    (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
-    v=['initialize','identify','updateOptions','pageLoad','track','trackAgent'];for(w=0,x=v.length;w<x;++w)(function(m){
-        o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
-        y=e.createElement(n);y.async=!0;y.src='https://cdn.eu.pendo.io/agent/static/'+publicAppId+'/pendo.js';
-        z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
+  (function(publicAppId){
+      (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
+      v=['initialize','identify','updateOptions','pageLoad','track','trackAgent'];for(w=0,x=v.length;w<x;++w)(function(m){
+          o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
+          y=e.createElement(n);y.async=!0;y.src='https://cdn.eu.pendo.io/agent/static/'+publicAppId+'/pendo.js';
+          z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
 
-        // This function creates visitors and accounts in Pendo
-        // You will need to replace <visitor-id-goes-here> and <account-id-goes-here> with values you use in your app
-        // Please use Strings, Numbers, or Bools for value types.
-        pendo.initialize({
-            visitor: {
-                id:              "user1" // Required if user is logged in
-                // email:        // Recommended if using Pendo Feedback, or NPS Email
-                // full_name:    // Recommended if using Pendo Feedback
-                // role:         // Optional
+          // This function creates visitors and accounts in Pendo
+          // You will need to replace <visitor-id-goes-here> and <account-id-goes-here> with values you use in your app
+          // Please use Strings, Numbers, or Bools for value types.
+          pendo.initialize({
+              visitor: {
+                  id:              "user1" // Required if user is logged in
+                  // email:        // Recommended if using Pendo Feedback, or NPS Email
+                  // full_name:    // Recommended if using Pendo Feedback
+                  // role:         // Optional
+              },
 
-                // You can add any additional visitor level key-values here,
-                // as long as it's not one of the above reserved names.
-            },
+              account: {
+                  id:              "company1" // Highly recommended, required if using Pendo Feedback or OEM Adopt
+                  // name:         // Optional
+                  // is_paying:    // Recommended if using Pendo Feedback
+                  // monthly_value:// Recommended if using Pendo Feedback
+                  // planLevel:    // Optional
+                  // planPrice:    // Optional
+                  // creationDate: // Optional
+              }
+          });
+  })('5eb799f4-01fc-4838-85d4-bb4f8c310eda');
+  </script>
 
-            account: {
-                id:              "company1" // Highly recommended, required if using Pendo Feedback or OEM Adopt
-                // name:         // Optional
-                // is_paying:    // Recommended if using Pendo Feedback
-                // monthly_value:// Recommended if using Pendo Feedback
-                // planLevel:    // Optional
-                // planPrice:    // Optional
-                // creationDate: // Optional
-
-                // You can add any additional account level key-values here,
-                // as long as it's not one of the above reserved names.
-            }
-        });
-})('5eb799f4-01fc-4838-85d4-bb4f8c310eda');
-</script>
-  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Feedback Portal</title>
+  <title>Feedback Portal – CCH iFirm</title>
 
   <style>
     body {
@@ -59,6 +53,8 @@
       padding: 16px 24px;
       background: #ffffff;
       border-bottom: 1px solid #e5e7eb;
+      position: relative;
+      z-index: 20;
     }
 
     header img {
@@ -85,21 +81,154 @@
       border-radius: 8px;
       color: #6b7280;
     }
+
+    /* --- Fly-out left navigation --- */
+
+    .menu-toggle {
+      margin-right: 12px;
+      border: none;
+      background: transparent;
+      font-size: 22px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .menu-toggle:focus-visible {
+      outline: 2px solid #3b82f6;
+      outline-offset: 2px;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -260px; /* hidden by default */
+      width: 240px;
+      height: 100vh;
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+      box-shadow: 2px 0 8px rgba(15, 23, 42, 0.08);
+      padding: 20px 16px;
+      box-sizing: border-box;
+      transition: left 0.25s ease-out;
+      z-index: 30;
+    }
+
+    body.nav-open .sidebar {
+      left: 0;
+    }
+
+    .sidebar-header {
+      font-size: 14px;
+      font-weight: 600;
+      color: #4b5563;
+      margin-bottom: 12px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar li + li {
+      margin-top: 6px;
+    }
+
+    .sidebar a {
+      display: block;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: #374151;
+    }
+
+    .sidebar a:hover {
+      background: #f3f4f6;
+    }
+
+    .sidebar a.active {
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-weight: 600;
+    }
+
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.25);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease-out;
+      z-index: 25;
+    }
+
+    body.nav-open .backdrop {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    @media (min-width: 900px) {
+      /* On larger screens keep the nav open by default */
+      body {
+        padding-left: 240px;
+      }
+
+      .sidebar {
+        left: 0;
+      }
+
+      .backdrop {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: none;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <!-- Fly-out nav -->
+  <nav id="sidebar" class="sidebar" aria-label="Product feedback navigation">
+    <div class="sidebar-header">Feedback pages</div>
+    <ul>
+      <!-- Change href if your original file is not index.html -->
+      <li><a href="index.html">Accounts Production</a></li>
+      <li><a href="cch-ifirm.html" class="active">CCH iFirm</a></li>
+    </ul>
+  </nav>
+  <div class="backdrop" onclick="toggleMenu()"></div>
+
   <header>
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-label="Open navigation"
+      onclick="toggleMenu()"
+    >
+      ☰
+    </button>
     <img src="Logo.jpeg" alt="Company logo" />
-    <h1>Tell Us What You Think About Accounts Production</h1>
+    <h1>Tell us what you think about CCH iFirm</h1>
   </header>
 
   <main>
     <p>
+      <!-- You can drop any intro text here if you like -->
     </p>
 
     <div class="placeholder">
+      <!-- Your feedback UI, form, or embedded widget can go here -->
     </div>
   </main>
+
+  <script>
+    function toggleMenu() {
+      document.body.classList.toggle('nav-open');
+    }
+  </script>
 </body>
 </html>
